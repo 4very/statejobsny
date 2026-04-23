@@ -1,4 +1,4 @@
-import list from './list'
+import list from './Table'
 import details from './details'
 import all from './all'
 

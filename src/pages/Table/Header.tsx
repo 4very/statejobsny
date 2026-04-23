@@ -33,13 +33,12 @@ const Header: Component<{ text?: string; index: number }> = (props) => {
     <th>
       <nys-button
         variant="ghost"
-        part="sort-button"
         label={props.text}
         on:nys-click={clickSort}
         prop:suffixIcon={
-          (sort() == null && 'height') ||
           (sort() == 'asc' && 'arrow_upward') ||
-          (sort() == 'dsc' && 'arrow_downward')
+          (sort() == 'dsc' && 'arrow_downward') ||
+          'height'
         }
       ></nys-button>
     </th>

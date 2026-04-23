@@ -1,5 +1,5 @@
 import { NysSelectProps } from '@nysds/components/react'
-import { createMemo, createSignal } from 'solid-js'
+import { createEffect, createMemo, createSignal } from 'solid-js'
 
 function useLinkedInput(
   query: string,
@@ -13,6 +13,12 @@ function useLinkedInput(
   }
 
   const [value, setValue] = createSignal(input?.value)
+
+  // createEffect(() => {
+  //   if (!input) return
+  //   if (value()) input.value = value()!
+  //   input.dispatchEvent(new Event(event))
+  // })
 
   return [value, update]
 }

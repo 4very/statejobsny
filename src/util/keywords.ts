@@ -1,4 +1,4 @@
-import { jobInformation } from '../pages/details/data'
+import { VacancyDetails } from '../parsing/VacancyDetails'
 import skills from '../data/skills.json'
 
 export interface Keyword {
@@ -10,7 +10,7 @@ const getRegexForWord = (word: string) =>
     `\\b${word.toLowerCase().replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}\\b`,
   )
 
-export function getKeywordsFromDetails(info: jobInformation | undefined) {
+export function getKeywordsFromDetails(info: VacancyDetails | undefined) {
   if (!info) return []
   const text = [
     info.jobspecifics.dutiesDescription.content,

@@ -1,11 +1,10 @@
 import { render } from 'solid-js/web'
 import Details from './Details'
-import { getDataFromPage } from './data'
+import { getDataFromPage } from '../../parsing/VacancyDetails'
 
 export default () => {
-  const data = getDataFromPage(document)
   render(
-    () => <Details data={data} />,
+    () => <Details />,
     (() => {
       const content = document.querySelector('#content')
       const app = document.createElement('div')

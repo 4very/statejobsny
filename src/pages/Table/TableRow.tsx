@@ -1,35 +1,26 @@
-import {
-  Component,
-  createMemo,
-  createResource,
-  createSignal,
-  For,
-  Show,
-} from 'solid-js'
+import { Component, createSignal, For, Show } from 'solid-js'
 import Tag from '../../components/Tag'
-import { getKeywordsFromDetails } from '../../util/keywords'
-import { getDataFromLink } from '../details/data'
-import { RowData } from './data'
+import { refreshStaleDetails, vacancyLookup } from '../../store'
 import Details from '../details/Details'
 
-const Row: Component<{ data: RowData; 'hide-row': () => void }> = (props) => {
-  const [listingData] = createResource(props.data.link, getDataFromLink)
-  const keywords = createMemo(() => getKeywordsFromDetails(listingData()))
-  const [expanded, setExpanded] = createSignal(false)
+const Row: Component<{ itemNum: string; 'hide-row': () => void }> = (props) => {
+  refreshStaleDetails(props.itemNum)
 
+  const vacancyData = () => vacancyLookup[props.itemNum]
+  const [expanded, setExpanded] = createSignal(false)
   return (
     <>
       <tr>
         <td>
           <nys-button
-            href={props.data.link}
+            href={vacancyData().table.link}
             icon="open_in_new"
             circle
             size="sm"
             variant="ghost"
           ></nys-button>
           <nys-button
-            id={`hide-button-${props.data.itemNum}`}
+            id={`hide-button-${vacancyData().table.itemNum}`}
             on:nys-click={props['hide-row']}
             icon="visibility_off"
             circle
@@ -37,13 +28,13 @@ const Row: Component<{ data: RowData; 'hide-row': () => void }> = (props) => {
             variant="ghost"
           ></nys-button>
           <nys-tooltip
-            for={`hide-button-${props.data.itemNum}`}
+            for={`hide-button-${vacancyData().table.itemNum}`}
             text="Hide Row from all search results"
             position="left"
           ></nys-tooltip>
 
           <nys-button
-            id={props.data.itemNum}
+            id={vacancyData().table.itemNum}
             icon={expanded() ? 'chevron_up' : 'chevron_down'}
             circle
             size="sm"
@@ -51,18 +42,18 @@ const Row: Component<{ data: RowData; 'hide-row': () => void }> = (props) => {
             on:nys-click={() => setExpanded(!expanded())}
           ></nys-button>
         </td>
-        <td>{props.data.itemNum}</td>
+        <td>{vacancyData().table.itemNum}</td>
         <td>
-          {props.data.title}
+          {vacancyData().table.title}
 
-          <Show when={keywords()?.length}>
+          <Show when={vacancyData().keywords}>
             <div class="nys-display-flex nys-flex-gap-50 nys-flex-wrap nys-margin-100">
-              <For each={keywords()}>
+              <For each={vacancyData().keywords}>
                 {(keyword, index) => (
                   <Tag
                     label={keyword.keyword}
                     index={index()}
-                    itemNum={props.data.itemNum}
+                    itemNum={vacancyData().table.itemNum}
                     skill={keyword.title}
                   ></Tag>
                 )}
@@ -84,16 +75,16 @@ const Row: Component<{ data: RowData; 'hide-row': () => void }> = (props) => {
             </For>
           </div>
         </td> */}
-        <td>{props.data.grade}</td>
-        <td>{props.data.posted}</td>
-        <td>{props.data.deadline}</td>
-        <td>{props.data.agency}</td>
-        <td>{props.data.county}</td>
+        <td>{vacancyData().table.grade}</td>
+        <td>{vacancyData().table.posted}</td>
+        <td>{vacancyData().table.deadline}</td>
+        <td>{vacancyData().table.agency}</td>
+        <td>{vacancyData().table.county}</td>
       </tr>
-      <Show when={expanded() && listingData()}>
+      <Show when={expanded() && vacancyData().details}>
         <tr class="expanded">
           <td colspan="8">
-            <Details data={listingData()}></Details>
+            <Details itemNum={props.itemNum}></Details>
           </td>
         </tr>
       </Show>

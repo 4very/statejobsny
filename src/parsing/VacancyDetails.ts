@@ -5,72 +5,70 @@ const sections = [
   'jobspecifics',
   'contact',
 ]
-
-interface dataEntry {
+interface Value {
   title: string
   content: string
   helpText?: string
-  raw: () => Node | undefined
+  raw: string | undefined
 }
 
-export type jobInformation = {
+export type VacancyDetails = {
   reviewInformation: {
-    datePosted: dataEntry
-    applicationsDue: dataEntry
-    vacancyID: dataEntry
+    datePosted: Value
+    applicationsDue: Value
+    vacancyID: Value
   }
   information: {
-    nYHELP: dataEntry
-    agency: dataEntry
-    title: dataEntry
-    occupationalCategory: dataEntry
-    salaryGrade: dataEntry
-    bargainingUnit: dataEntry
-    salaryRange: dataEntry
-    employmentType: dataEntry
-    appointmentType: dataEntry
-    jurisdictionalClass: dataEntry
-    travelPercentage: dataEntry
+    nYHELP: Value
+    agency: Value
+    title: Value
+    occupationalCategory: Value
+    salaryGrade: Value
+    bargainingUnit: Value
+    salaryRange: Value
+    employmentType: Value
+    appointmentType: Value
+    jurisdictionalClass: Value
+    travelPercentage: Value
   }
   schedule: {
-    workweek: dataEntry
-    hoursPerWeek: dataEntry
-    from: dataEntry
-    to: dataEntry
-    'flextimeAllowed?': dataEntry
-    'mandatoryOvertime?': dataEntry
-    'compressedWorkweekAllowed?': dataEntry
-    'telecommutingAllowed?': dataEntry
+    workweek: Value
+    hoursPerWeek: Value
+    from: Value
+    to: Value
+    'flextimeAllowed?': Value
+    'mandatoryOvertime?': Value
+    'compressedWorkweekAllowed?': Value
+    'telecommutingAllowed?': Value
   }
   location: {
-    county: dataEntry
-    streetAddress: dataEntry
-    '': dataEntry
-    city: dataEntry
-    state: dataEntry
-    zipCode: dataEntry
+    county: Value
+    streetAddress: Value
+    '': Value
+    city: Value
+    state: Value
+    zipCode: Value
   }
   jobspecifics: {
-    dutiesDescription: dataEntry
-    minimumQualifications: dataEntry
-    additionalComments: dataEntry
+    dutiesDescription: Value
+    minimumQualifications: Value
+    additionalComments: Value
   }
   contact: {
-    name: dataEntry
-    telephone: dataEntry
-    fax: dataEntry
-    emailAddress: dataEntry
-    street: dataEntry
-    '': dataEntry
-    city: dataEntry
-    state: dataEntry
-    zipCode: dataEntry
-    notesOnApplying: dataEntry
+    name: Value
+    telephone: Value
+    fax: Value
+    emailAddress: Value
+    street: Value
+    '': Value
+    city: Value
+    state: Value
+    zipCode: Value
+    notesOnApplying: Value
   }
 }
 
 export async function getDataFromLink(link: string) {
-
   return fetch(link)
     .then((r) => r.text())
     .then((htmlText) => {
@@ -81,7 +79,7 @@ export async function getDataFromLink(link: string) {
 }
 
 export function getDataFromPage(document: Document) {
-  const returnValue: Record<string, Record<string, dataEntry>> = {}
+  const returnValue: Record<string, Record<string, Value>> = {}
   const reviewInformation = document.querySelectorAll(
     'div.columnReport > p.row',
   )
@@ -92,11 +90,10 @@ export function getDataFromPage(document: Document) {
     returnValue[section] = parseRows(sectionRows)
   }
   // console.log(returnValue)
-  return returnValue as jobInformation
+  return returnValue as VacancyDetails
 }
-
 function parseRows(elts: NodeListOf<Element>) {
-  const returnValue: Record<string, dataEntry> = {}
+  const returnValue: Record<string, Value> = {}
   elts.forEach((elt) => {
     const parsedValue = parseRow(elt)
     if (!parsedValue) return
@@ -104,25 +101,21 @@ function parseRows(elts: NodeListOf<Element>) {
   })
   return returnValue
 }
-
-function parseRow(elt: Element | null): dataEntry | undefined {
+function parseRow(elt: Element | null): Value | undefined {
   if (!elt) return
   const leftCol = elt.querySelector('span.leftCol')
   const rightCol = elt.querySelector('span.rightCol')
 
   const helpButton = elt.querySelector('a.help')
 
-  const rightColNode = rightCol?.cloneNode(true)
-
-  let returnValue: dataEntry = {
+  let returnValue: Value = {
     title: getTextContentFromTextNodesOnly(leftCol),
     content: getTextContentFromTextNodesOnly(rightCol),
-    raw: () => rightColNode?.cloneNode(true),
+    raw: rightCol?.innerHTML,
   }
   if (helpButton) returnValue['helpText'] = helpButton.textContent.trim()
   return returnValue
 }
-
 function getTextContentFromTextNodesOnly(elt: Element | null) {
   if (!elt) return ''
   return [...elt.childNodes]
@@ -133,7 +126,6 @@ function getTextContentFromTextNodesOnly(elt: Element | null) {
     .join(' ')
     .trim()
 }
-
 function camelize(str: string) {
   return str
     .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {

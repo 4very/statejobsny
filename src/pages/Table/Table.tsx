@@ -1,19 +1,16 @@
-import { For, Show, type Component } from 'solid-js'
+import { createEffect, For, Show, type Component } from 'solid-js'
 
-import { NysSelectProps, NysTextinputProps } from '@nysds/components/react'
-import { getReactivePageData } from './data'
-import Row from './Row'
+import { getAndWatchTableData } from '../../parsing/VacancyTable'
+import Row from './TableRow'
 
 import { useLocalStorage } from '../../util/localStorage'
-import Header from './Header'
-import Pagination from './Pagination'
-import SearchParams from './SearchParams'
-import LinkedInput from '../../components/LinkedInput'
 import useLinkedInput from '../../util/useLinkedInput'
+import Header from './Header'
+import SearchParams from './SearchParams'
+import Pagination from './Pagination'
 
 const List: Component = () => {
-  const data = getReactivePageData(document)
-
+  const tableData = getAndWatchTableData()
   const [tableLength, updateTableLength] = useLinkedInput(
     'select#dt-length-0',
     'change',
@@ -123,7 +120,7 @@ const List: Component = () => {
             </thead>
             <tbody>
               <For
-                each={data().rows}
+                each={tableData()?.rows}
                 fallback={
                   <tr>
                     <td
@@ -135,12 +132,11 @@ const List: Component = () => {
                   </tr>
                 }
               >
-                {(item, index) => (
-                  <Show when={!hiddenRows().includes(item.itemNum)}>
+                {(itemNum) => (
+                  <Show when={!hiddenRows().includes(itemNum)}>
                     <Row
-                      data-index={item.itemNum}
-                      data={item}
-                      hide-row={() => hideRow(item.itemNum)}
+                      itemNum={itemNum}
+                      hide-row={() => hideRow(itemNum)}
                     ></Row>
                   </Show>
                 )}
@@ -149,15 +145,9 @@ const List: Component = () => {
           </table>
         </div>
       </div>
-      <div
-        class="nys-display-flex nys-flex-align-center nys-flex-gap-50 nys-margin-50"
-        style={{ 'justify-content': 'space-between' }}
-      >
-        <span>
-          Showing {data().start} to {data().end} of {data().total} entries
-        </span>
-        <Pagination data={data()}></Pagination>
-      </div>
+      <Show when={tableData()}>
+        <Pagination data={tableData()!}></Pagination>
+      </Show>
     </div>
   )
 }

@@ -24,6 +24,10 @@ const { CATEGORIES, REGIONS, JURIS_IDS, AGENCY } = lookups as Record<
   Record<string, string>
 >
 
+export function getUrlParams(search: string) {
+  return new URLSearchParams(search)
+}
+
 export function getSearchParams(search: string) {
   const loc = new URLSearchParams(search)
   const cats = [...loc.entries()]
