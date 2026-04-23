@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite';
-import solidPlugin from 'vite-plugin-solid';
-import monkey from 'vite-plugin-monkey';
+import { defineConfig } from 'vite'
+import solidPlugin from 'vite-plugin-solid'
+import monkey, { cdn } from 'vite-plugin-monkey'
 
 export default defineConfig({
   plugins: [
@@ -10,8 +10,13 @@ export default defineConfig({
       userscript: {
         icon: 'https://vitejs.dev/logo.svg',
         namespace: 'npm/vite-plugin-monkey',
-        match: ['https://www.google.com/'],
+        match: ['https://www.statejobsny.com/*'],
       },
+      // build: {
+      //   externalResource: {
+      //     '@nysds/styles/dist/nysds-full.min.css': cdn.jsdelivr(),
+      //   },
+      // },
     }),
   ],
-});
+})

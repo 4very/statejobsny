@@ -1,0 +1,10 @@
+.Tag {
+  background-color: var(--nys-color-theme-mid);
+  color: var(--nys-color-text-reverse);
+  border-radius: var(--nys-radius-sm);
+  padding-left: var(--nys-space-50);
+  padding-right: var(--nys-space-50);
+  padding-top: var(--nys-space-2px);
+  padding-bottom: var(--nys-space-2px);
+  width: max-content;
+}
