@@ -1,12 +1,16 @@
-import { Component, createSignal, onMount } from 'solid-js'
+import { Component, createSignal } from 'solid-js'
+import {
+  createEltSignal,
+  useNullableMutationObserver,
+} from '../../util/useWaitForElt'
 
 const Header: Component<{ text?: string; index: number }> = (props) => {
-  const dtHeader = document.querySelector<HTMLTableCellElement>(
+  const dtHeader = createEltSignal<HTMLTableCellElement>(
     `table#vacancyTable thead th:nth-of-type(${props.index})`,
   )
 
   const getSort = () => {
-    switch (dtHeader?.ariaSort) {
+    switch (dtHeader()?.ariaSort) {
       case 'descending':
         return 'dsc'
       case 'ascending':
@@ -18,16 +22,16 @@ const Header: Component<{ text?: string; index: number }> = (props) => {
 
   const [sort, setSort] = createSignal<'asc' | 'dsc' | null>(getSort())
 
-  const clickSort = () => dtHeader?.click()
+  const clickSort = () => dtHeader()?.click()
 
-  onMount(() => {
-    if (!dtHeader) return
-    const observer = new MutationObserver(() => setSort(getSort()))
-    observer.observe(dtHeader, {
+  useNullableMutationObserver(
+    `table#vacancyTable thead th:nth-of-type(${props.index})`,
+    () => setSort(getSort()),
+    {
       attributes: true,
       attributeFilter: ['aria-sort'],
-    })
-  })
+    },
+  )
 
   return (
     <th>

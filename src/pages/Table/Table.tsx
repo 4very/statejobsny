@@ -1,22 +1,16 @@
-import { createEffect, For, Show, type Component } from 'solid-js'
+import { For, Show, type Component } from 'solid-js'
 
 import { getAndWatchTableData } from '../../parsing/VacancyTable'
-import Row from './TableRow'
+import TableRow from './TableRow'
 
 import { useLocalStorage } from '../../util/localStorage'
-import useLinkedInput from '../../util/useLinkedInput'
-import Header from './Header'
 import SearchParams from './SearchParams'
-import Pagination from './Pagination'
+import SortableColumnHeader from './SortableColumnHeader'
+import TableFooter from './TableFooter'
+import TableHeader from './TableHeader'
 
-const List: Component = () => {
+const Table: Component = () => {
   const tableData = getAndWatchTableData()
-  const [tableLength, updateTableLength] = useLinkedInput(
-    'select#dt-length-0',
-    'change',
-  )
-
-  const [search, updateSearch] = useLinkedInput('input#dt-search-0', 'input')
 
   const [hiddenRows, setHiddenRows] = useLocalStorage<string[]>(
     'hidden-rows',
@@ -29,57 +23,13 @@ const List: Component = () => {
   return (
     <div id="app">
       <SearchParams></SearchParams>
-
-      <div class="nys-display-flex nys-flex-gap-50 nys-margin-100 nys-flex-align-end">
-        <nys-select
-          label="Entries per page"
-          value={tableLength()}
-          on:nys-change={updateTableLength}
-        >
-          <option
-            value="10"
-            selected={tableLength() == '10'}
-          >
-            10
-          </option>
-          <option
-            value="25"
-            selected={tableLength() == '25'}
-          >
-            25
-          </option>
-          <option
-            value="50"
-            selected={tableLength() == '50'}
-          >
-            50
-          </option>
-          <option
-            value="100"
-            selected={tableLength() == '100'}
-          >
-            100
-          </option>
-        </nys-select>
-
-        <nys-textinput
-          prop:label="Search"
-          prop:value={search()}
-          on:nys-input={updateSearch}
-        ></nys-textinput>
-
-        <Show when={hiddenRows()?.length}>
-          <nys-button
-            id="clear-hidden-rows"
-            prop:label="Clear Hidden Rows"
-            on:nys-click={() => setHiddenRows([])}
-          ></nys-button>
-          <nys-tooltip
-            for="clear-hidden-rows"
-            text="I am a tooltip."
-          ></nys-tooltip>
-        </Show>
-      </div>
+      <Show when={tableData()}>
+        <TableHeader
+          data={tableData()!}
+          hiddenRows={hiddenRows()}
+          clearHiddenRows={() => setHiddenRows([])}
+        ></TableHeader>
+      </Show>
 
       <div class="nys-table">
         <div class="nys-table-wrapper">
@@ -87,35 +37,35 @@ const List: Component = () => {
             <thead>
               <tr>
                 <th></th>
-                <Header
+                <SortableColumnHeader
                   text="Item #"
                   index={1}
-                ></Header>
-                <Header
+                ></SortableColumnHeader>
+                <SortableColumnHeader
                   text="Title"
                   index={2}
-                ></Header>
+                ></SortableColumnHeader>
                 {/* <th>Keywords</th> */}
-                <Header
+                <SortableColumnHeader
                   text="Grade"
                   index={3}
-                ></Header>
-                <Header
+                ></SortableColumnHeader>
+                <SortableColumnHeader
                   text="Posted"
                   index={4}
-                ></Header>
-                <Header
+                ></SortableColumnHeader>
+                <SortableColumnHeader
                   text="Deadline"
                   index={5}
-                ></Header>
-                <Header
+                ></SortableColumnHeader>
+                <SortableColumnHeader
                   text="Agency"
                   index={6}
-                ></Header>
-                <Header
+                ></SortableColumnHeader>
+                <SortableColumnHeader
                   text="County"
                   index={7}
-                ></Header>
+                ></SortableColumnHeader>
               </tr>
             </thead>
             <tbody>
@@ -134,10 +84,10 @@ const List: Component = () => {
               >
                 {(itemNum) => (
                   <Show when={!hiddenRows().includes(itemNum)}>
-                    <Row
+                    <TableRow
                       itemNum={itemNum}
                       hide-row={() => hideRow(itemNum)}
-                    ></Row>
+                    ></TableRow>
                   </Show>
                 )}
               </For>
@@ -146,10 +96,10 @@ const List: Component = () => {
         </div>
       </div>
       <Show when={tableData()}>
-        <Pagination data={tableData()!}></Pagination>
+        <TableFooter data={tableData()!}></TableFooter>
       </Show>
     </div>
   )
 }
 
-export default List
+export default Table

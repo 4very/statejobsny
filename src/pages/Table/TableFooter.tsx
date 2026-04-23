@@ -3,7 +3,7 @@ import { Component, createSignal, Show } from 'solid-js'
 import { TableData } from '../../parsing/VacancyTable'
 import { useWaitForElt } from '../../util/useWaitForElt'
 
-const Pagination: Component<{ data: TableData }> = (props) => {
+const TableFooter: Component<{ data: TableData }> = (props) => {
   const [buttonContainer, setButtonContainer] =
     createSignal<HTMLDivElement | null>(null)
 
@@ -43,4 +43,4 @@ const Pagination: Component<{ data: TableData }> = (props) => {
   )
 }
 
-export default Pagination
+export default TableFooter

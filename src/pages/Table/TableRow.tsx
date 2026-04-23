@@ -3,7 +3,9 @@ import Tag from '../../components/Tag'
 import { refreshStaleDetails, vacancyLookup } from '../../store'
 import Details from '../details/Details'
 
-const Row: Component<{ itemNum: string; 'hide-row': () => void }> = (props) => {
+const TableRow: Component<{ itemNum: string; 'hide-row': () => void }> = (
+  props,
+) => {
   refreshStaleDetails(props.itemNum)
 
   const vacancyData = () => vacancyLookup[props.itemNum]
@@ -92,4 +94,4 @@ const Row: Component<{ itemNum: string; 'hide-row': () => void }> = (props) => {
   )
 }
 
-export default Row
+export default TableRow

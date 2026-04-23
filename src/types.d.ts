@@ -8,13 +8,13 @@ declare module 'solid-js' {
   namespace JSX {
     type Props<T, E = 'div'> = {
       [K in keyof T as `prop:${string & K}` | (string & K)]?: T[K]
-    } & ComponentProps<E>
+    } & JSX.ComponentProps<E>
     interface IntrinsicElements {
       'nys-button': Props<NYSDS.NysButton>
       'nys-table': Props<NYSDS.NysTable>
       'nys-select': Props<NYSDS.NysSelect> & any
       'nys-icon': Props<NYSDS.NysIcon>
-      'nys-textinput': Props<NYSDS.NysTextinput>
+      'nys-textinput': Props<NYSDS.NysTextinput, 'input'>
       'nys-badge': Props<NYSDS.NysBadge>
       'nys-tooltip': Props<NYSDS.NysTooltip>
       'nys-pagination': Props<NYSDS.NysPagination>

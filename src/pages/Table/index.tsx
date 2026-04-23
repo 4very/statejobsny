@@ -1,6 +1,6 @@
 import { render } from 'solid-js/web'
-import Table from './Table'
 import { getRowsFromPage } from '../../parsing/VacancyTable'
+import App from './App'
 
 function hide(d: Document) {
   const table = d.querySelector<HTMLDivElement>('div#vacancyTable_wrapper')
@@ -10,7 +10,7 @@ function hide(d: Document) {
 export default () => {
   // hide(document)
   render(
-    () => <Table />,
+    () => <App />,
     (() => {
       const tableWrapper = document.querySelector('div#content')
       const app = document.createElement('div')
