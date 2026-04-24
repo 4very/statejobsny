@@ -1,13 +1,12 @@
 import { NysPaginationProps } from '@nysds/components/react'
-import { Component, createSignal, Show } from 'solid-js'
+import { Component, createResource, createSignal, Show } from 'solid-js'
 import { TableData } from '../../parsing/VacancyTable'
 import { useWaitForElt } from '../../util/useWaitForElt'
 
 const TableFooter: Component<{ data: TableData }> = (props) => {
-  const [buttonContainer, setButtonContainer] =
-    createSignal<HTMLDivElement | null>(null)
-
-  useWaitForElt('div.dt-paging').then(setButtonContainer)
+  const [buttonContainer, { refetch: refetchButtonContainer }] = createResource(
+    () => useWaitForElt('div.dt-paging'),
+  )
 
   const handlePageChange: NysPaginationProps['onNysChange'] = (e) => {
     const pageInfo = props.data.pages
@@ -21,7 +20,7 @@ const TableFooter: Component<{ data: TableData }> = (props) => {
     buttonContainer()
       ?.querySelector<HTMLButtonElement>(querySelector)
       ?.dispatchEvent(new Event('click'))
-    // console.log(getPageInfo())
+    refetchButtonContainer()
   }
   return (
     <div
@@ -31,6 +30,9 @@ const TableFooter: Component<{ data: TableData }> = (props) => {
       <span>
         Showing {props.data.items.start} to {props.data.items.end} of{' '}
         {props.data.items.total} entries
+        {props.data.items.from
+          ? ` (filtered from ${props.data.items.from} entries)`
+          : ''}
       </span>
       <Show when={props.data.pages.current != 0}>
         <nys-pagination

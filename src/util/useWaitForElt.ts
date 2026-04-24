@@ -1,13 +1,21 @@
 import { createSignal, onCleanup } from 'solid-js'
 
+const TIMEOUT_MS = 60 * 1000
+
 export function useWaitForElt<T extends Element>(selector: string): Promise<T> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const elt = document.querySelector<T>(selector)
     if (elt) return resolve(elt)
+
+    const timeout_id = setTimeout(
+      () => reject('Could not resolve element in reasonable time.'),
+      TIMEOUT_MS,
+    )
 
     const observer = new MutationObserver((_) => {
       const elt = document.querySelector<T>(selector)
       if (elt) {
+        clearTimeout(timeout_id)
         observer.disconnect()
         return resolve(elt)
       }

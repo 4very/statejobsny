@@ -21,8 +21,7 @@ const Table: Component = () => {
     !hiddenRows().includes(id) && setHiddenRows([...hiddenRows(), id])
 
   return (
-    <div id="app">
-      <SearchParams></SearchParams>
+    <div>
       <Show when={tableData()}>
         <TableHeader
           data={tableData()!}

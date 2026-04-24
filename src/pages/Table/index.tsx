@@ -1,14 +1,14 @@
 import { render } from 'solid-js/web'
-import { getRowsFromPage } from '../../parsing/VacancyTable'
 import App from './App'
+import { useWaitForElt } from '../../util/useWaitForElt'
 
-function hide(d: Document) {
-  const table = d.querySelector<HTMLDivElement>('div#vacancyTable_wrapper')
-  table!.style.display = 'none'
+function hide() {
+  useWaitForElt<HTMLDivElement>('div#vacancyTable_wrapper').then(
+    (table) => (table.style.display = 'none'),
+  )
 }
 
 export default () => {
-  // hide(document)
   render(
     () => <App />,
     (() => {
@@ -18,4 +18,5 @@ export default () => {
       return app
     })(),
   )
+  hide()
 }

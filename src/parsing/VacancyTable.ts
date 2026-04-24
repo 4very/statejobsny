@@ -10,6 +10,7 @@ export interface TableInfo {
     total: number
     start: number
     end: number
+    from?: number
   }
   pages: {
     total: number
@@ -65,32 +66,54 @@ export async function getTableData(): Promise<TableData> {
     rows: rows.map((r) => r.itemNum),
   }
 }
+
+function createNumber(numStr: string | undefined) {
+  return Number(numStr?.replace(',', '') ?? '0') ?? 0
+}
+
+const TABLE_INFO_REGEX =
+  /^Showing (?<start>[\d,]+) to (?<end>[\d,]+) of (?<total>[\d,]+) entries( \(filtered from (?<from>[\d,]+) total entries\))?$/i
+
 export async function getTableInfoFromPage(): Promise<TableInfo> {
   const tableInfo = await useWaitForElt(SELECTORS.table_info)
   const regexInfo = TABLE_INFO_REGEX.exec(tableInfo?.textContent ?? '')
+  console.log(tableInfo)
   const lengthInput = await useWaitForElt<HTMLSelectElement>(
     SELECTORS.lengthInput,
   )
+  const items = {
+    start: createNumber(regexInfo?.groups?.start),
+    end: createNumber(regexInfo?.groups?.end),
+    total: createNumber(regexInfo?.groups?.total),
+    from: regexInfo?.groups?.from
+      ? createNumber(regexInfo?.groups?.from)
+      : undefined,
+  }
 
   const pageButtons = await useWaitForElt<HTMLDivElement>(SELECTORS.pageInput)
   const currentButton = pageButtons.querySelector('.current')
+
   const lastButton = pageButtons.querySelector('.dt-paging-button:has(+ .next)')
 
+  const pages = {
+    total: createNumber(lastButton?.textContent),
+    current: createNumber(currentButton?.textContent),
+    size: createNumber(lengthInput?.value),
+  }
+
+  if (!currentButton) {
+    pages.current = Math.floor((items.start - 1) / pages.size) + 1
+  }
+
+  if (!lastButton) {
+    pages.total = Math.floor((items.end - 1) / pages.size) + 1
+  }
+
   return {
-    items: {
-      start: Number(regexInfo?.groups?.start) ?? 0,
-      end: Number(regexInfo?.groups?.end) ?? 0,
-      total: Number(regexInfo?.groups?.total) ?? 0,
-    },
-    pages: {
-      total: Number(lastButton?.textContent ?? 0),
-      current: Number(currentButton?.textContent ?? 0),
-      size: Number(lengthInput?.value) ?? 0,
-    },
+    items,
+    pages,
   }
 }
-const TABLE_INFO_REGEX =
-  /^Showing (?<start>\d+) to (?<end>\d+) of (?<total>\d+) entries( \(filtered from (?<from>\d+) total entries\))?$/i
 
 export async function getRowsFromPage() {
   const rows = (await useWaitForElt(SELECTORS.table)).querySelectorAll(
