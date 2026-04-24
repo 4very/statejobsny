@@ -1,6 +1,10 @@
-import { createStore, SetStoreFunction } from 'solid-js/store'
+import { createStore } from 'solid-js/store'
 import { RowData } from './parsing/VacancyTable'
-import { getDataFromLink, VacancyDetails } from './parsing/VacancyDetails'
+import {
+  getDataFromLink,
+  getDataFromPage,
+  VacancyDetails,
+} from './parsing/VacancyDetails'
 import { getKeywordsFromDetails, Keyword } from './util/keywords'
 import { getLocalStorageItem, setLocalStorageItem } from './util/localStorage'
 
@@ -43,6 +47,10 @@ export function refreshDetails(key: string) {
   getDataFromLink(DETAILS_LINK + key).then((details) =>
     addDetails(key, details),
   )
+}
+
+export function refreshDetailsFromPage(key: string) {
+  getDataFromPage(document).then((d) => addDetails(key, d))
 }
 
 export function addDetails(key: string, details: VacancyDetails) {

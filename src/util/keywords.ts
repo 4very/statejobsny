@@ -16,7 +16,7 @@ export function getKeywordsFromDetails(info: VacancyDetails | undefined) {
     info.jobspecifics.dutiesDescription.content,
     info.jobspecifics.minimumQualifications.content,
   ]
-    .join()
+    .join(' ')
     .toLowerCase()
 
   const keywords: Keyword[] = []
@@ -28,4 +28,19 @@ export function getKeywordsFromDetails(info: VacancyDetails | undefined) {
     }
   }
   return keywords
+}
+
+export function boldKeywords(text: string) {
+  let returnValue = text
+  for (const skill of skills) {
+    for (const keyword of skill.skills) {
+      const regexExec = getRegexForWord(keyword).exec(text)
+
+      if (regexExec != null) {
+        returnValue = `${text.slice(0, regexExec.index)}<b>${text.slice(regexExec.index, regexExec[0].length + regexExec.index)}</b>${text.slice(regexExec[0].length + regexExec.index)}`
+      }
+    }
+  }
+
+  return returnValue
 }

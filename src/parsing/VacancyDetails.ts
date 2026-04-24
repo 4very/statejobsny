@@ -1,11 +1,13 @@
-const sections = [
-  'information',
-  'schedule',
-  'location',
-  'jobspecifics',
-  'contact',
+import { useWaitForElt, useWaitForElts } from '../util/useWaitForElt'
+
+export const sections = [
+  ['information', 'Information'],
+  ['schedule', 'Schedule'],
+  ['location', 'Location'],
+  ['jobspecifics', 'Job Specifics'],
+  ['contact', 'How to Apply'],
 ]
-interface Value {
+export interface DetailsItem {
   title: string
   content: string
   helpText?: string
@@ -14,57 +16,55 @@ interface Value {
 
 export type VacancyDetails = {
   reviewInformation: {
-    datePosted: Value
-    applicationsDue: Value
-    vacancyID: Value
+    datePosted: DetailsItem
+    applicationsDue: DetailsItem
+    vacancyID: DetailsItem
   }
   information: {
-    nYHELP: Value
-    agency: Value
-    title: Value
-    occupationalCategory: Value
-    salaryGrade: Value
-    bargainingUnit: Value
-    salaryRange: Value
-    employmentType: Value
-    appointmentType: Value
-    jurisdictionalClass: Value
-    travelPercentage: Value
+    nYHELP: DetailsItem
+    agency: DetailsItem
+    title: DetailsItem
+    occupationalCategory: DetailsItem
+    salaryGrade: DetailsItem
+    bargainingUnit: DetailsItem
+    salaryRange: DetailsItem
+    employmentType: DetailsItem
+    appointmentType: DetailsItem
+    jurisdictionalClass: DetailsItem
+    travelPercentage: DetailsItem
   }
   schedule: {
-    workweek: Value
-    hoursPerWeek: Value
-    from: Value
-    to: Value
-    'flextimeAllowed?': Value
-    'mandatoryOvertime?': Value
-    'compressedWorkweekAllowed?': Value
-    'telecommutingAllowed?': Value
+    workweek: DetailsItem
+    hoursPerWeek: DetailsItem
+    from: DetailsItem
+    to: DetailsItem
+    'flextimeAllowed?': DetailsItem
+    'mandatoryOvertime?': DetailsItem
+    'compressedWorkweekAllowed?': DetailsItem
+    'telecommutingAllowed?': DetailsItem
   }
   location: {
-    county: Value
-    streetAddress: Value
-    '': Value
-    city: Value
-    state: Value
-    zipCode: Value
+    county: DetailsItem
+    streetAddress: DetailsItem
+    city: DetailsItem
+    state: DetailsItem
+    zipCode: DetailsItem
   }
   jobspecifics: {
-    dutiesDescription: Value
-    minimumQualifications: Value
-    additionalComments: Value
+    dutiesDescription: DetailsItem
+    minimumQualifications: DetailsItem
+    additionalComments: DetailsItem
   }
   contact: {
-    name: Value
-    telephone: Value
-    fax: Value
-    emailAddress: Value
-    street: Value
-    '': Value
-    city: Value
-    state: Value
-    zipCode: Value
-    notesOnApplying: Value
+    name: DetailsItem
+    telephone: DetailsItem
+    fax: DetailsItem
+    emailAddress: DetailsItem
+    street: DetailsItem
+    city: DetailsItem
+    state: DetailsItem
+    zipCode: DetailsItem
+    notesOnApplying: DetailsItem
   }
 }
 
@@ -74,46 +74,65 @@ export async function getDataFromLink(link: string) {
     .then((htmlText) => {
       const parser = new DOMParser()
       const document = parser.parseFromString(htmlText, 'text/html')
+      console.log(document.querySelector('a.help'))
       return getDataFromPage(document)
     })
 }
 
-export function getDataFromPage(document: Document) {
-  const returnValue: Record<string, Record<string, Value>> = {}
-  const reviewInformation = document.querySelectorAll(
-    'div.columnReport > p.row',
-  )
-  returnValue['reviewInformation'] = parseRows(reviewInformation)
+export async function getDataFromPage(doc: Document) {
+  const returnValue: Record<string, Record<string, DetailsItem>> = {}
 
-  for (const section of sections) {
-    const sectionRows = document.querySelectorAll(`#${section} > p.row`)
-    returnValue[section] = parseRows(sectionRows)
-  }
-  // console.log(returnValue)
+  await useWaitForElt('div.columnReport a.help')
+  const columnReport = await useWaitForElt('div.columnReport', doc)
+  returnValue['reviewInformation'] = parseRows(
+    await useWaitForElts('p.row', columnReport),
+  )
+
+  sections.forEach(([section]) =>
+    useWaitForElts(`#${section} > p.row`, doc).then(
+      (rows) => (returnValue[section] = parseRows(rows)),
+    ),
+  )
+
   return returnValue as VacancyDetails
 }
+
 function parseRows(elts: NodeListOf<Element>) {
-  const returnValue: Record<string, Value> = {}
+  const returnValue: Record<string, DetailsItem> = {}
+  let lastKey: string
   elts.forEach((elt) => {
     const parsedValue = parseRow(elt)
     if (!parsedValue) return
-    returnValue[camelize(parsedValue.title)] = parsedValue
+    let key = camelize(parsedValue.title)
+
+    if (key == '') {
+      const lastValue = returnValue[lastKey]
+
+      returnValue[lastKey] = {
+        ...lastValue,
+        raw: lastValue.raw + '<br/>' + parsedValue.raw,
+        content: lastValue.content + '\n' + parsedValue.content,
+      }
+    } else {
+      returnValue[camelize(parsedValue.title)] = parsedValue
+    }
+    lastKey = key
   })
   return returnValue
 }
-function parseRow(elt: Element | null): Value | undefined {
+function parseRow(elt: Element | null): DetailsItem | undefined {
   if (!elt) return
   const leftCol = elt.querySelector('span.leftCol')
   const rightCol = elt.querySelector('span.rightCol')
 
-  const helpButton = elt.querySelector('a.help')
-
-  let returnValue: Value = {
+  const helpButton = leftCol?.querySelector<HTMLSpanElement>('a.help > span')
+  // console.log(helpButton)
+  let returnValue: DetailsItem = {
     title: getTextContentFromTextNodesOnly(leftCol),
     content: getTextContentFromTextNodesOnly(rightCol),
     raw: rightCol?.innerHTML,
+    helpText: helpButton?.textContent.trim(),
   }
-  if (helpButton) returnValue['helpText'] = helpButton.textContent.trim()
   return returnValue
 }
 function getTextContentFromTextNodesOnly(elt: Element | null) {

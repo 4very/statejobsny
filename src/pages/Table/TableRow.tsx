@@ -1,7 +1,7 @@
 import { Component, createSignal, For, Show } from 'solid-js'
 import Tag from '../../components/Tag'
 import { refreshStaleDetails, vacancyLookup } from '../../store'
-import Details from '../details/Details'
+import DetailsSummary from './DetailsSummary'
 
 const TableRow: Component<{ itemNum: string; 'hide-row': () => void }> = (
   props,
@@ -63,20 +63,6 @@ const TableRow: Component<{ itemNum: string; 'hide-row': () => void }> = (
             </div>
           </Show>
         </td>
-        {/* <td>
-          <div class="nys-display-flex nys-flex-gap-50 nys-flex-wrap">
-            <For each={keywords()}>
-              {(keyword, index) => (
-                <Tag
-                  label={keyword.keyword}
-                  index={index()}
-                  itemNum={props.data.itemNum}
-                  skill={keyword.title}
-                ></Tag>
-              )}
-            </For>
-          </div>
-        </td> */}
         <td>{vacancyData().table.grade}</td>
         <td>{vacancyData().table.posted}</td>
         <td>{vacancyData().table.deadline}</td>
@@ -86,7 +72,7 @@ const TableRow: Component<{ itemNum: string; 'hide-row': () => void }> = (
       <Show when={expanded() && vacancyData().details}>
         <tr class="expanded">
           <td colspan="8">
-            <Details itemNum={props.itemNum}></Details>
+            <DetailsSummary itemNum={props.itemNum}></DetailsSummary>
           </td>
         </tr>
       </Show>

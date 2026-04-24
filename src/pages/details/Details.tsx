@@ -1,34 +1,94 @@
-import { For, mergeProps, Show, type Component } from 'solid-js'
+import { For, Index, JSX, mergeProps, Show, type Component } from 'solid-js'
 
 import { refreshStaleDetails, vacancyLookup } from '../../store'
 import { getUrlParams } from '../../util/searchParams'
+import DetailsItem from './DetailsItem'
+import DetailsItemInline from './DetailsItemInline'
+import DetailsTable from './DetailsTable'
+import Tag from '../../components/Tag'
 
-const Details: Component<{ itemNum?: string }> = (rawProps) => {
+const Details: Component<
+  { itemNum?: string } & JSX.DOMAttributes<HTMLDivElement>
+> = (rawProps) => {
   const urlParams = getUrlParams(document.location.search)
   const props = mergeProps(
     { itemNum: urlParams.get('id') ?? undefined },
     rawProps,
   )
   if (!props.itemNum) return <></>
-  refreshStaleDetails(props.itemNum)
   const data = () => vacancyLookup[props.itemNum!]?.details
   return (
     <Show when={data()}>
-      <div>
-        <div>
+      <div
+        {...rawProps}
+        id="details"
+      >
+        <h1>{data()?.information.title.content}</h1>
+        <Show when={vacancyLookup[props.itemNum!].keywords}>
+          <div
+            class="nys-display-flex nys-flex-gap-50 nys-flex-wrap"
+            style={{ 'padding-bottom': 'var(--nys-space-200)' }}
+          >
+            <For each={vacancyLookup[props.itemNum!].keywords}>
+              {(keyword, index) => (
+                <Tag
+                  label={keyword.keyword}
+                  index={index()}
+                  itemNum={props.itemNum!}
+                  skill={keyword.title}
+                ></Tag>
+              )}
+            </For>
+          </div>
+        </Show>
+        <div id="">
+          <DetailsItemInline
+            item={data()?.reviewInformation.datePosted!}
+          ></DetailsItemInline>
+          <DetailsItemInline
+            item={data()?.reviewInformation.applicationsDue!}
+          ></DetailsItemInline>
+          <DetailsItemInline
+            item={data()?.reviewInformation.vacancyID!}
+          ></DetailsItemInline>
+        </div>
+        <div id="new-information">
+          <h2>Information</h2>
+          <DetailsTable
+            data={Object.values(data()?.information!)}
+          ></DetailsTable>
+        </div>
+        <div id="new-schedule">
+          <h2>Schedule</h2>
+          <DetailsTable data={Object.values(data()?.schedule!)}></DetailsTable>
+        </div>
+        <div id="new-location">
+          <h2>Location</h2>
+          <DetailsTable data={Object.values(data()?.location!)}></DetailsTable>
+        </div>
+        <div id="new-jobspecifics">
           <h2>Job Specifics</h2>
-          <h3>Duties Description</h3>
-          <h6>{data()!.jobspecifics.dutiesDescription.helpText}</h6>
-          <span innerHTML={data()!.jobspecifics.dutiesDescription.raw}></span>
-          <h3>Minimum Qualifications</h3>
-          <span
-            innerHTML={data()!.jobspecifics.minimumQualifications.raw}
-          ></span>
-          <h3>Additional Comments</h3>
-          <span>{data()!.jobspecifics.additionalComments.raw}</span>
+          <DetailsItem
+            item={data()!.jobspecifics.dutiesDescription}
+            highlight={true}
+            itemNum={props.itemNum}
+          ></DetailsItem>
+          <DetailsItem
+            item={data()!.jobspecifics.minimumQualifications}
+            highlight={true}
+            itemNum={props.itemNum}
+          ></DetailsItem>
+          <DetailsItem
+            item={data()!.jobspecifics.additionalComments}
+          ></DetailsItem>
         </div>
 
-        <nys-accordion>
+        <div id="new-contact">
+          <h2>How to Apply</h2>
+          <DetailsTable data={Object.values(data()?.contact!)}></DetailsTable>
+        </div>
+
+        {/* <nys-accordion>
           <nys-accordionitem
             id="num2"
             heading="Full Data"
@@ -65,7 +125,7 @@ const Details: Component<{ itemNum?: string }> = (rawProps) => {
               </For>
             </div>
           </nys-accordionitem>
-        </nys-accordion>
+        </nys-accordion> */}
       </div>
     </Show>
   )
