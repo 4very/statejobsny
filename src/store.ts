@@ -8,6 +8,10 @@ import {
 import { getKeywordsFromDetails, Keyword } from './util/keywords'
 import { getLocalStorageItem, setLocalStorageItem } from './util/localStorage'
 
+function getDetailsLink(itemNum: string) {
+  const type = document.location.pathname.split('/')[1]
+  return `${document.location.origin}/${type}/vacancyDetailsView.cfm?id=${itemNum}`
+}
 const DETAILS_LINK =
   'https://www.statejobsny.com/public/vacancyDetailsView.cfm?id='
 
@@ -44,7 +48,7 @@ export function refreshStaleDetails(key: string) {
 }
 
 export function refreshDetails(key: string) {
-  getDataFromLink(DETAILS_LINK + key).then((details) =>
+  getDataFromLink(getDetailsLink(key)).then((details) =>
     addDetails(key, details),
   )
 }

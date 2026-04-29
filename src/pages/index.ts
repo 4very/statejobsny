@@ -2,4 +2,6 @@ import list from './Table'
 import details from './Details'
 import all from './all'
 
-export default { list, details, all }
+import search from './Search'
+
+export default { list, details, all, search }

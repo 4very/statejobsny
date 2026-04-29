@@ -2,6 +2,7 @@ import { Component, Index } from 'solid-js'
 import { sections } from '../../parsing/VacancyDetails'
 
 const Sidebar: Component = () => {
+
   let navItems: Record<string, HTMLLIElement> = {}
   function setActive() {
     let activeKey = 'information'

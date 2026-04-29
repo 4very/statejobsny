@@ -13,6 +13,9 @@ declare module 'solid-js' {
       'nys-button': Props<NYSDS.NysButton>
       'nys-table': Props<NYSDS.NysTable>
       'nys-select': Props<NYSDS.NysSelect> & any
+      'nys-combobox': Props<NYSDS.NysCombobox> & any
+      'nys-datepicker': Props<NYSDS.NysDatepicker>
+      'nys-checkbox': Props<NYSDS.NysCheckbox>
       'nys-icon': Props<NYSDS.NysIcon>
       'nys-textinput': Props<NYSDS.NysTextinput, 'input'>
       'nys-badge': Props<NYSDS.NysBadge>

@@ -1,4 +1,12 @@
-import { For, Index, JSX, mergeProps, Show, type Component } from 'solid-js'
+import {
+  createEffect,
+  For,
+  Index,
+  JSX,
+  mergeProps,
+  Show,
+  type Component,
+} from 'solid-js'
 
 import { refreshStaleDetails, vacancyLookup } from '../../store'
 import { getUrlParams } from '../../util/searchParams'
@@ -17,6 +25,8 @@ const Details: Component<
   )
   if (!props.itemNum) return <></>
   const data = () => vacancyLookup[props.itemNum!]?.details
+
+  createEffect(() => console.log(data()))
   return (
     <Show when={data()}>
       <div

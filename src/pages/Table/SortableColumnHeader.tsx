@@ -1,16 +1,10 @@
 import { Component, createSignal } from 'solid-js'
-import {
-  createEltSignal,
-  useNullableMutationObserver,
-} from '../../util/useWaitForElt'
+import { linkedButton } from '../../directive/linked'
+import type { NysButton } from '@nysds/components'
 
 const Header: Component<{ text?: string; index: number }> = (props) => {
-  const dtHeader = createEltSignal<HTMLTableCellElement>(
-    `table#vacancyTable thead th:nth-of-type(${props.index})`,
-  )
-
-  const getSort = () => {
-    switch (dtHeader()?.ariaSort) {
+  const getSort = (el: HTMLElement) => {
+    switch (el.ariaSort) {
       case 'descending':
         return 'dsc'
       case 'ascending':
@@ -20,25 +14,27 @@ const Header: Component<{ text?: string; index: number }> = (props) => {
     }
   }
 
-  const [sort, setSort] = createSignal<'asc' | 'dsc' | null>(getSort())
+  function changeSort(nysEl: NysButton, srcEl: HTMLTableCellElement) {
+    setSort(getSort(srcEl))
+  }
 
-  const clickSort = () => dtHeader()?.click()
+  const [sort, setSort] = createSignal<'asc' | 'dsc' | null>(null)
 
-  useNullableMutationObserver(
-    `table#vacancyTable thead th:nth-of-type(${props.index})`,
-    () => setSort(getSort()),
-    {
-      attributes: true,
-      attributeFilter: ['aria-sort'],
-    },
-  )
+  const observerOptions = {
+    attributes: true,
+    attributeFilter: ['aria-sort'],
+  }
 
   return (
     <th>
       <nys-button
         variant="ghost"
         label={props.text}
-        on:nys-click={clickSort}
+        use:linkedButton={[
+          `table#vacancyTable thead th:nth-of-type(${props.index})`,
+          changeSort,
+          observerOptions,
+        ]}
         prop:suffixIcon={
           (sort() == 'asc' && 'arrow_upward') ||
           (sort() == 'dsc' && 'arrow_downward') ||

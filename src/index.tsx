@@ -7,7 +7,9 @@ import './assets/theme-admin.css'
 
 import pages from './pages'
 
-const srcPage = document.location.pathname.match('public/(.+)\.cfm')
+const pathRegex = /(?<root>public|employees)\/(?<page>.+)\.cfm/g
+
+const path = pathRegex.exec(document.location.pathname)
 
 const pageMapping: Record<string, { render: () => void }> = {
   vacancyDetailsView: {
@@ -16,13 +18,17 @@ const pageMapping: Record<string, { render: () => void }> = {
   vacancyTable: {
     render: pages.list,
   },
+
+  search: {
+    render: pages.search,
+  },
 }
 
 pages.all()
 
-if (srcPage != null) {
-  const page = pageMapping[srcPage[1]]
-  if (!page) console.log(`Mapping not found for "${srcPage[1]}"`)
+if (path != null && path.groups != undefined) {
+  const page = pageMapping[path.groups.page]
+  if (!page) console.log(`Mapping not found for "${path.groups.page}"`)
   else {
     page.render()
   }

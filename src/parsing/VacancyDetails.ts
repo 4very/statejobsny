@@ -74,7 +74,6 @@ export async function getDataFromLink(link: string) {
     .then((htmlText) => {
       const parser = new DOMParser()
       const document = parser.parseFromString(htmlText, 'text/html')
-      console.log(document.querySelector('a.help'))
       return getDataFromPage(document)
     })
 }
@@ -82,7 +81,7 @@ export async function getDataFromLink(link: string) {
 export async function getDataFromPage(doc: Document) {
   const returnValue: Record<string, Record<string, DetailsItem>> = {}
 
-  await useWaitForElt('div.columnReport a.help')
+  // await useWaitForElt('div.columnReport a.help')
   const columnReport = await useWaitForElt('div.columnReport', doc)
   returnValue['reviewInformation'] = parseRows(
     await useWaitForElts('p.row', columnReport),
@@ -125,13 +124,13 @@ function parseRow(elt: Element | null): DetailsItem | undefined {
   const leftCol = elt.querySelector('span.leftCol')
   const rightCol = elt.querySelector('span.rightCol')
 
-  const helpButton = leftCol?.querySelector<HTMLSpanElement>('a.help > span')
-  // console.log(helpButton)
+  const helpButton = leftCol?.querySelector<HTMLSpanElement>('a.help')
+
   let returnValue: DetailsItem = {
     title: getTextContentFromTextNodesOnly(leftCol),
     content: getTextContentFromTextNodesOnly(rightCol),
     raw: rightCol?.innerHTML,
-    helpText: helpButton?.textContent.trim(),
+    helpText: helpButton?.title || helpButton?.textContent,
   }
   return returnValue
 }
