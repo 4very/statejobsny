@@ -1,5 +1,7 @@
 import { VacancyDetails } from '../parsing/VacancyDetails'
-import skills from '../data/skills.json'
+// import skills from '../data/skills.json'
+const skills2 = await import('../data/skills_blank.json')
+const skills = skills2.default as any[]
 
 export interface Keyword {
   title: string

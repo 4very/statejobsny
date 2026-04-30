@@ -24,6 +24,8 @@ dist-ssr
 *.sw?
 
 
-src/data
+src/data/skills.json
 
 .env
+
+avery

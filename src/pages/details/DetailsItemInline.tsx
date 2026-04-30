@@ -1,5 +1,5 @@
 import { Component, Show } from 'solid-js'
-import type { DetailsItem } from '../../parsing/VacancyDetails'
+import type { DetailsItem } from '@/parsing/VacancyDetails'
 
 const DetailsItemInline: Component<{ item: DetailsItem }> = (props) => {
   return (

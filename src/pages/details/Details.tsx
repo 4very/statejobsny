@@ -8,12 +8,12 @@ import {
   type Component,
 } from 'solid-js'
 
-import { refreshStaleDetails, vacancyLookup } from '../../store'
-import { getUrlParams } from '../../util/searchParams'
+import { refreshStaleDetails, vacancyLookup } from '@/store'
+import { getUrlParams } from '@/util/searchParams'
 import DetailsItem from './DetailsItem'
 import DetailsItemInline from './DetailsItemInline'
 import DetailsTable from './DetailsTable'
-import Tag from '../../components/Tag'
+import Tag from '@/components/Tag'
 
 const Details: Component<
   { itemNum?: string } & JSX.DOMAttributes<HTMLDivElement>

@@ -1,8 +1,8 @@
 import { render } from 'solid-js/web'
 import Details from './Details'
-import { getDataFromPage } from '../../parsing/VacancyDetails'
-import { getSearchParams, getUrlParams } from '../../util/searchParams'
-import { refreshDetails, refreshDetailsFromPage } from '../../store'
+import { getDataFromPage } from '@/parsing/VacancyDetails'
+import { getSearchParams, getUrlParams } from '@/util/searchParams'
+import { refreshDetails, refreshDetailsFromPage } from '@/store'
 import Sidebar from './Sidebar'
 
 function hide() {

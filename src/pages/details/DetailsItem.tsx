@@ -1,6 +1,6 @@
 import { Component, Show } from 'solid-js'
-import type { DetailsItem } from '../../parsing/VacancyDetails'
-import { boldKeywords } from '../../util/keywords'
+import type { DetailsItem } from '@/parsing/VacancyDetails'
+import { boldKeywords } from '@/util/keywords'
 
 const DetailsItem: Component<
   { item: DetailsItem } & (

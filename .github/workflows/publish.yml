@@ -1,0 +1,25 @@
+name: Publish
+
+permissions:
+  contents: write
+
+on:
+  push:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v5
+
+      - run: pnpm install
+
+      - run: pnpm build
+
+      - name: Release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v3
+        with:
+          files: dist/statejobsny.user.js

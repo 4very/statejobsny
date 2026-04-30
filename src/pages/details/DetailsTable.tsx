@@ -1,5 +1,5 @@
 import { Component, Index, Show } from 'solid-js'
-import type { DetailsItem } from '../../parsing/VacancyDetails'
+import type { DetailsItem } from '@/parsing/VacancyDetails'
 
 const DetailsTable: Component<{ data: DetailsItem[] }> = (props) => {
   return (
