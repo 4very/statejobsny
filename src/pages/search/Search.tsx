@@ -2,8 +2,10 @@ import { Component, createEffect, createResource, Index } from 'solid-js'
 import { linkedButton, linkedInput, linkedSelect } from '@/directive/linked'
 import { useWaitForElts } from '@/util/useWaitForElt'
 import type { NysDatepicker } from '@nysds/components'
+import { getSearchParamsLookup } from '@/stores/searchParamsLookup'
 
 const Search: Component = (props) => {
+  getSearchParamsLookup()
   const getFieldsetByLegend = async (legendText: string) => {
     const fieldsets = await useWaitForElts<HTMLFieldSetElement>(
       'fieldset',
@@ -28,8 +30,6 @@ const Search: Component = (props) => {
       ) ?? []),
     ]),
   )
-
-  createEffect(() => console.log(categories()))
 
   let dateMin!: NysDatepicker
   let dateMax!: NysDatepicker

@@ -45,11 +45,9 @@ const SELECTORS = {
 
 export function getAndWatchTableData() {
   const [tableData, setTableData] = createSignal<TableData | undefined>()
-  console.log(getTableInfoFromPage().then(console.log))
 
   getTableData().then((r) => setTableData(r))
 
-  createEffect(() => console.log(tableData()))
   useNullableMutationObserver(
     Object.values(SELECTORS),
     () => getTableData().then((r) => setTableData(r)),
@@ -77,7 +75,6 @@ const TABLE_INFO_REGEX =
 export async function getTableInfoFromPage(): Promise<TableInfo> {
   const tableInfo = await useWaitForElt(SELECTORS.table_info)
   const regexInfo = TABLE_INFO_REGEX.exec(tableInfo?.textContent ?? '')
-  console.log(tableInfo)
   const lengthInput = await useWaitForElt<HTMLSelectElement>(
     SELECTORS.lengthInput,
   )

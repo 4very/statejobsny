@@ -1,4 +1,4 @@
-import lookups from '../data/lookups.json'
+import { SearchParamsLookup } from '@/stores/searchParamsLookup'
 
 interface SearchData {
   Keywords: string
@@ -19,31 +19,30 @@ interface SearchData {
   SalMin: string
 }
 
-const { CATEGORIES, REGIONS, JURIS_IDS, AGENCY } = lookups as Record<
-  keyof typeof lookups,
-  Record<string, string>
->
-
 export function getUrlParams(search: string) {
   return new URLSearchParams(search)
 }
 
-export function getSearchParams(search: string) {
+export function getSearchParams(
+  search: string,
+  searchParamsLookup: SearchParamsLookup,
+) {
   const loc = new URLSearchParams(search)
   const cats = [...loc.entries()]
     .filter(([key, value]) => key.startsWith('cat') && key.endsWith(value))
-    .map(([_, value]) => CATEGORIES[value])
+    .map(([_, value]) => searchParamsLookup.CATEGORIES[value])
 
   const regions = [...loc.entries()]
     .filter(([key, value]) => key.startsWith('region') && key.endsWith(value))
-    .map(([_, value]) => REGIONS[value])
+    .map(([_, value]) => searchParamsLookup.REGIONS[value])
 
   const returnValue = {
     ...Object.fromEntries(loc.entries()),
     categories: cats,
     regions: regions,
-    jurisdictional_class: JURIS_IDS[loc.get('JurisClassID') ?? ''],
-    agency: AGENCY[loc.get('AgID') ?? ''],
+    jurisdictional_class:
+      searchParamsLookup.JURIS_IDS[loc.get('JurisClassID') ?? ''],
+    agency: searchParamsLookup.AGENCY[loc.get('AgID') ?? ''],
   } as SearchData
 
   return returnValue

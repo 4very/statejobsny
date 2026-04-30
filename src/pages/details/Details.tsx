@@ -26,7 +26,6 @@ const Details: Component<
   if (!props.itemNum) return <></>
   const data = () => vacancyLookup[props.itemNum!]?.details
 
-  createEffect(() => console.log(data()))
   return (
     <Show when={data()}>
       <div

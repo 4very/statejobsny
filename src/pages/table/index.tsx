@@ -1,6 +1,6 @@
 import { render } from 'solid-js/web'
-import Table from './Table'
 import { useWaitForElt } from '@/util/useWaitForElt'
+import App from './App'
 
 function hide() {
   useWaitForElt<HTMLDivElement>('div#vacancyTable_wrapper').then(
@@ -10,7 +10,7 @@ function hide() {
 
 export default () => {
   render(
-    () => <Table />,
+    () => <App />,
     (() => {
       const tableWrapper = document.querySelector('div#content')
       const app = document.createElement('div')

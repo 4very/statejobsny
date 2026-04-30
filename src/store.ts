@@ -7,13 +7,12 @@ import {
 } from './parsing/VacancyDetails'
 import { getKeywordsFromDetails, Keyword } from './util/keywords'
 import { getLocalStorageItem, setLocalStorageItem } from './util/localStorage'
+import { getPathInformation } from './util/pathInformation'
 
 function getDetailsLink(itemNum: string) {
-  const type = document.location.pathname.split('/')[1]
-  return `${document.location.origin}/${type}/vacancyDetailsView.cfm?id=${itemNum}`
+  const pageContext = getPathInformation()
+  return `${document.location.origin}/${pageContext.root}/vacancyDetailsView.cfm?id=${itemNum}`
 }
-const DETAILS_LINK =
-  'https://www.statejobsny.com/public/vacancyDetailsView.cfm?id='
 
 type Vacancy = {
   table: RowData
@@ -24,7 +23,9 @@ type Vacancy = {
 
 export const [vacancyLookup, setVacancyLookup] = createStore<
   Record<string, Vacancy>
->(getLocalStorageItem('vacancy_lookup', {}))
+>({})
+
+getLocalStorageItem('vacancy_lookup', {}).then(setVacancyLookup)
 
 const updateLocalStorage = () =>
   setLocalStorageItem('vacancy_lookup', vacancyLookup)

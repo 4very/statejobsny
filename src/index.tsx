@@ -4,31 +4,29 @@ import '../node_modules/@nysds/components/dist/nysds.js'
 import './assets/nysds-full.min.css'
 import './assets/nysds-typography.min.css'
 import './assets/theme-admin.css'
+import { getPathInformation } from './util/pathInformation.js'
 
-import pages from './pages'
+// import pages from '@/pages/index'
+// console.log(pages)
 
-const pathRegex = /(?<root>public|employees)\/(?<page>.+)\.cfm/g
-
-const path = pathRegex.exec(document.location.pathname)
-
-const pageMapping: Record<string, { render: () => void }> = {
+const pageMapping: Record<string, { render: () => Promise<void> }> = {
   vacancyDetailsView: {
-    render: pages.details,
+    render: async () => (await import('@/pages/details')).default(),
   },
   vacancyTable: {
-    render: pages.list,
+    render: async () => (await import('@/pages/table/index.jsx')).default(),
   },
 
   search: {
-    render: pages.search,
+    render: async () => (await import('@/pages/search')).default(),
   },
 }
 
-pages.all()
+const path = getPathInformation()
 
-if (path != null && path.groups != undefined) {
-  const page = pageMapping[path.groups.page]
-  if (!page) console.log(`Mapping not found for "${path.groups.page}"`)
+if (path != null && path.page != undefined) {
+  const page = pageMapping[path.page]
+  if (!page) console.log(`Mapping not found for "${path.page}"`)
   else {
     page.render()
   }
