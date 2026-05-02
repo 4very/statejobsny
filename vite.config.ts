@@ -14,21 +14,20 @@ export default defineConfig({
         grant: ['GM.getValue', 'GM.setValue'],
         downloadURL:
           'https://github.com/4very/statejobsny/releases/download/latest/statejobsny.user.js',
+        require: ['https://cdn.jsdelivr.net/npm/@nysds/components@1.16.0'],
       },
       build: {
         autoGrant: false,
       },
-      // build: {
-      //   externalResource: {
-      //     '@nysds/styles/dist/nysds-full.min.css': cdn.jsdelivr(),
-      //   },
-      // },
     }),
   ],
+  build: {
+    minify: true,
+  },
 
   resolve: {
     alias: {
-      '@': '/src',
+      '@/': '/src/',
     },
   },
 })

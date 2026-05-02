@@ -8,34 +8,16 @@ importers:
 
   .:
     dependencies:
-      '@nysds/components':
-        specifier: ^1.16.0
-        version: 1.16.0
-      '@nysds/nys-button':
-        specifier: ^1.16.1
-        version: 1.16.1
-      '@nysds/nys-icon':
-        specifier: ^1.16.1
-        version: 1.16.1
-      '@nysds/nys-label':
-        specifier: ^1.16.1
-        version: 1.16.1
-      '@nysds/nys-select':
-        specifier: ^1.16.1
-        version: 1.16.1
-      '@nysds/nys-table':
-        specifier: ^1.16.0
-        version: 1.16.0
-      '@nysds/nys-textinput':
-        specifier: ^1.16.1
-        version: 1.16.1
-      '@nysds/styles':
-        specifier: ^1.16.0
-        version: 1.16.0
       solid-js:
         specifier: ^1.9.9
         version: 1.9.12
     devDependencies:
+      '@nysds/components':
+        specifier: ^1.16.0
+        version: 1.16.0
+      '@nysds/styles':
+        specifier: ^1.16.0
+        version: 1.16.0
       lit:
         specifier: ^3.3.2
         version: 3.3.2
@@ -315,30 +297,6 @@ packages:
 
   '@nysds/components@1.16.0':
     resolution: {integrity: sha512-AhpfZO9A71M3YUOk1D7POWG3jTRrJShpJIBijZtj6BrHJuZQtSDnP0P4G1n8r5luLLZeqxz1E6PcgmnrlAw+mQ==}
-
-  '@nysds/nys-button@1.16.1':
-    resolution: {integrity: sha512-RARUTPDWv3YSjH3wvaorxFOisoa/Ga8CiUFF8CF6l4SA2/VI1FQIwndfBm6LDv3NeXqXXNfVS7vstguR9Qkseg==}
-
-  '@nysds/nys-errormessage@1.16.1':
-    resolution: {integrity: sha512-wBUqaZt+d0DdlMCdukCy99mCRLffhcdFrSVq/vH7b40Kt19NYj7CqmCNfB7EP/EtK1Q7a65bQklHKh68ZH4ymg==}
-
-  '@nysds/nys-icon@1.16.1':
-    resolution: {integrity: sha512-exK/dLlHzphUtA/ewbfDU58ws60GHn3WNaFStt7uraV25F7lL8crmJgf1fRTZp0tRE3Ssm5VefUI0GHD9WKqVA==}
-
-  '@nysds/nys-label@1.16.1':
-    resolution: {integrity: sha512-Vn5jafSE4o4EMgScSo5p1nu4NDkD0Pcl2U5Gt3tPWKo3pqR472J0+eU6Y0Vr1uPNF4CzRTwv58oFdbAcIXJQsg==}
-
-  '@nysds/nys-select@1.16.1':
-    resolution: {integrity: sha512-W7i2tyGsL7t9v/Z01Liao+JzVF7t7PqOGKfvCxCfpIl09HDPaa6wpQSkSrWD51eju1iTCt3E68ERZts5vTp2eQ==}
-
-  '@nysds/nys-table@1.16.0':
-    resolution: {integrity: sha512-pM58ifc8XfOGikCveNcWIMHtNlWhIMs4bgVdvaZjIS8tLDnZH7NeDIoHqF6J+uONCzb2kN8r0KtHAVSiYcj6vw==}
-
-  '@nysds/nys-textinput@1.16.1':
-    resolution: {integrity: sha512-Q0cVJsJMmr0ziQPmDa6/5GTL6pu185LaE6hciqYh86ZvbVKNPxratBVHQqhsLutWOXhzTHg6KKtQfqxXnat/kw==}
-
-  '@nysds/nys-tooltip@1.16.1':
-    resolution: {integrity: sha512-LvxQ7wbOlUq8qMBVTc5zuLFOIyA4FHuYquCIuFTa9aDS9YzViLyY2P+HAQl4qWve2jg2av1+z1yRn7Wb4TlIeA==}
 
   '@nysds/styles@1.16.0':
     resolution: {integrity: sha512-ZDy57kj8IDSnVrxNB282G1mStZCrKjTJCSmG9L/SPLabwA8Na/so3chF4DOeLyWwmNwyzAcwmdunWJbdDXNw6w==}
@@ -1126,40 +1084,6 @@ snapshots:
   '@nysds/components@1.16.0':
     dependencies:
       wc-datepicker: 0.9.5
-
-  '@nysds/nys-button@1.16.1':
-    dependencies:
-      '@nysds/nys-icon': 1.16.1
-
-  '@nysds/nys-errormessage@1.16.1':
-    dependencies:
-      '@nysds/nys-icon': 1.16.1
-
-  '@nysds/nys-icon@1.16.1': {}
-
-  '@nysds/nys-label@1.16.1':
-    dependencies:
-      '@nysds/nys-icon': 1.16.1
-      '@nysds/nys-tooltip': 1.16.1
-
-  '@nysds/nys-select@1.16.1':
-    dependencies:
-      '@nysds/nys-errormessage': 1.16.1
-      '@nysds/nys-icon': 1.16.1
-      '@nysds/nys-label': 1.16.1
-
-  '@nysds/nys-table@1.16.0':
-    dependencies:
-      '@nysds/nys-button': 1.16.1
-      '@nysds/nys-icon': 1.16.1
-
-  '@nysds/nys-textinput@1.16.1':
-    dependencies:
-      '@nysds/nys-errormessage': 1.16.1
-      '@nysds/nys-icon': 1.16.1
-      '@nysds/nys-label': 1.16.1
-
-  '@nysds/nys-tooltip@1.16.1': {}
 
   '@nysds/styles@1.16.0':
     dependencies:

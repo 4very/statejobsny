@@ -1,13 +1,10 @@
 /* @refresh reload */
 import './index.css'
-import '../node_modules/@nysds/components/dist/nysds.js'
+
 import './assets/nysds-full.min.css'
 import './assets/nysds-typography.min.css'
 import './assets/theme-admin.css'
 import { getPathInformation } from './util/pathInformation.js'
-
-// import pages from '@/pages/index'
-// console.log(pages)
 
 const pageMapping: Record<string, { render: () => Promise<void> }> = {
   vacancyDetailsView: {
